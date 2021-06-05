@@ -1,0 +1,16 @@
+import os
+
+DEBUG = False
+
+BACKTEST = "backtest"
+LIVE = "live"
+
+ENV = os.getenv("ENVIRONMENT", BACKTEST)
+
+COIN_TARGET = "BTC"
+COIN_REFER = "USDT"
+
+APIKEY = 'x2f7KEqKQTe6VyoW8JqTa666KcdvR6l5WlsBldC4Mn2MVvbHKN3RKUlaELSdeOva'
+SECRET = 'KjoMLIlCDxmAGSSPdQhCfZ9fOhPvnbN3s7xXIfNToH3yD9UarCOlLZEgbC2fBolA'
+
+EXCHANGE = 'binance'

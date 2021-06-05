@@ -1,1 +1,2 @@
 # myquant
+基于backtrader的个人量化平台
