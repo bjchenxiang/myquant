@@ -1,8 +1,20 @@
+import json
+import requests
 from loguru import logger
+from datetime import datetime
 
-
-def send_dingding_message(msg):
-    logger.debug(msg)
+def send_dingding_msg(content, robot_id=''):
+    try:
+        msg = {
+            "msgtype": "text",
+            "text": {"content": content + '\n\n' + datetime.now().strftime("%m-%d %H:%M:%S")}}
+        headers = {"Content-Type": "application/json;charset=utf-8"}
+        url = 'https://oapi.dingtalk.com/robot/send?access_token=' + robot_id                
+        body = json.dumps(msg)
+        requests.post(url, data=body, headers=headers)
+        print('成功发送钉钉')
+    except Exception as e:
+        print("发送钉钉失败:", e)
 
 
 def print_trade_analysis(analyzer):
@@ -42,3 +54,8 @@ def print_trade_analysis(analyzer):
 def print_sqn(analyzer):
     sqn = round(analyzer.sqn, 2)
     print('SQN: {}'.format(sqn))
+
+
+if __name__ == '__main__':
+    print('ok')
+    send_dingding_msg('交易提醒：\n\rtest', robot_id='5976356a909a8bdddba07bb0132f17507b9cf8483e1ff1e0702fbbe534ea60b0')

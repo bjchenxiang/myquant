@@ -1,10 +1,10 @@
 {
     "exchange":"binance",
     "coin_target":"BTC",
-    "coin_refer":"USDT",
+    "coin_refer":"USDT",    
     "broker":{
-        "apiKey": "x2f7KEqKQTe6VyoW8JqTa666KcdvR6l5WlsBldC4Mn2MVvbHKN3RKUlaELSdeOva",
-        "secret" : "KjoMLIlCDxmAGSSPdQhCfZ9fOhPvnbN3s7xXIfNToH3yD9UarCOlLZEgbC2fBolA",
+        "apiKey": "",
+        "secret" : "",
         "enabledRateLimit": true,
         "proxies": {
             "http": "http://127.0.0.1:1081",
@@ -20,8 +20,9 @@
             "deep":10,
             "count":100,
             "live_records" : "live.csv",
-            "cash":2249,
-            "position":0.027
+            "cash":1000,
+            "position":0.05,
+            "ding_token":"5976356a909a8bdddba07bb0132f17507b9cf8483e1ff1e0702fbbe534ea60b0"
         }
     }
 }
