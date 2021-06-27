@@ -1,12 +1,12 @@
 import backtrader as bt
 from backtrader import indicator
 import numpy as np
-from myquant.indicators.grid import GridIndicator, GridPositionIndicator
+from indicators.grid import GridIndicator, GridPositionIndicator
 
 
 class GridStrategy(bt.Strategy):
     params = (
-        ('grid_size', 10),
+        ('grid_size', 100),
     )
 
     def __init__(self):

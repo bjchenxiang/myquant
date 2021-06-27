@@ -8,7 +8,8 @@
             "name": "Python: 网格交易(币安BTC)",
             "type": "python",
             "request": "launch",
-            "program": "apps\\crypto\\run.py",
+            // "program": "apps\\crypto\\run.py",
+            "program": "apps\\crypto\\main_classic_grid.py",
             "console": "integratedTerminal",
             "env": {
                 "PYTHONPATH": "${workspaceFolder}",
@@ -28,6 +29,7 @@
             "env": {
                 "PYTHONPATH": "${workspaceFolder}"
             },
+            "justMyCode": true
         }
     ]
 }

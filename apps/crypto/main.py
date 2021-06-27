@@ -8,13 +8,13 @@ from loguru import logger
 from backtrader_plotting import Bokeh
 from backtrader_plotting.schemes import Tradimo
 from datetime import datetime, timedelta
-from myquant.utils.message import send_dingding_message, print_sqn, print_trade_analysis
-from myquant.utils.constant import BROKER_MAPPING
-from myquant.utils.object import CustomDataset, FullMoney
+# from utils.message import send_dingding_message, print_sqn, print_trade_analysis
+from utils.constant import BROKER_MAPPING
+from utils.object import CustomDataset, FullMoney
 # from myquant.strategies.echo_strategy import EchoStrategy
 # from myquant.strategies.rsi_strategy import RSIStrategy
-from myquant.strategies.grid_strategy import GridStrategy
-from myquant.strategies.maflow import MAFlowStrategy
+from strategies.grid_strategy import GridStrategy
+from strategies.maflow import MAFlowStrategy
 # from myquant.strategies.boll_strategy import BollStrategy
 # from myquant.strategies.turtle_strategy import TurtleStrategy, TradeSizer
 from setting import *
@@ -54,8 +54,8 @@ def set_backtest_data(cerebro):
         dataname=os.path.join(os.path.dirname(__file__),
                               "dataset/binance_btcusdt_1m.1.csv"),
         timeframe=bt.TimeFrame.Minutes,
-        fromdate=datetime(2017, 8, 17),
-        todate=datetime(2017, 10, 31),
+        fromdate=datetime(2021, 5, 1),
+        todate=datetime(2021, 5, 11),
         # todate=datetime(2018, 3, 18),
         # todate=datetime(2020, 7, 7),
         # todate=datetime(2021, 4, 27),

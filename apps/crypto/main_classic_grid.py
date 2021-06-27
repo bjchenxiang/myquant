@@ -7,27 +7,31 @@ from datetime import datetime, timedelta
 from ccxtbt import CCXTStore
 from backtrader_plotting import Bokeh
 from backtrader_plotting.schemes import Tradimo,Blackly
-from myquant.strategies.classic_grid_strategy import ClassicGridStrategy
-from myquant.strategies.grid_strategy import GridStrategy
-from myquant.utils.constant import BROKER_MAPPING
+from strategies.classic_grid_strategy import ClassicGridStrategy,GridType
+from strategies.grid_strategy import GridStrategy
+from utils.constant import BROKER_MAPPING
 
 
 settings = {
     'coin':'BTC',
     'data':os.path.join(os.path.dirname(__file__),
-                          "dataset/binance_btcusdt_1m.3.csv"),
-    'start': datetime(2021, 5, 22),
-    'end':  datetime(2021, 6, 1),
+                          "dataset/binance_btcusdt_1m.1.csv"),
+    'start': datetime(2021, 5, 1),
+    'end':  datetime(2021, 5, 10),
     'start_cash':100000,
-    'commission':0.0002,
+    'commission':0.0008,
     'strategy':{
         'params':{
-            'bottom':30000,
-            'top':40000,
-            'count':100,
-            'live_records' : 'live.csv',
+            'bottom':50000,
+            'top':60000,
             'cash':2249,
-            'position':0.027
+            'position':0.027,
+            'type':GridType.Different,
+            'line_space':100,
+            'max_order_amount': 3,
+            'percise': 3,
+            'min_trade_unit': 0.00001,
+            'is_live': False
         }
     }
 }
@@ -49,7 +53,9 @@ def backtest():
     cerebro.broker.setcommission(commission=settings['commission'])
 
     params=settings['strategy']['params']
-    cerebro.addstrategy(ClassicGridStrategy,bottom=params['bottom'],top=params['top'],count=params['count'])
+    cerebro.addstrategy(ClassicGridStrategy,bottom=params['bottom'],top=params['top'],cash=cerebro.broker.cash,type=params['type'],
+                        line_space=params['line_space'], max_order_amount=params['max_order_amount'],percise=params['percise'],
+                        min_trade_unit=params['min_trade_unit'],is_live=params['is_live'])
     
     initial_value = cerebro.broker.getvalue()
     logger.info('起始资产: %.2f' % initial_value)
@@ -127,7 +133,7 @@ def run_live():
 
 if __name__ == '__main__':
     print('如需使用回测，请使用backtest()函数')
-    # backtest()
-    run_live()
+    backtest()
+    # run_live()
 
 
