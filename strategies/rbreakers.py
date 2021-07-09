@@ -2,11 +2,13 @@ import backtrader as bt
 import backtrader.indicators as btind
 from datetime import time ,datetime, date
 from indicators.rbreaker import RBreakersIndicator
+from loguru import logger
 
 class RBreakers(bt.Strategy):
     params = (
         ('lose_stop', 1), 
-        ('win_stop', 1.2)
+        ('win_stop', 1.2),
+        ('print_log',False)
     )
     def __init__(self):
         self.rbreaker = RBreakersIndicator()
@@ -18,6 +20,9 @@ class RBreakers(bt.Strategy):
         
         self.buy_price = None
         self.sell_price = None
+    
+    def start(self):
+        logger.info('启动参数：lose_stop=%.2f, win_stop=%.2f' % (self.p.lose_stop,self.p.win_stop))
 
     def next(self):
         if self._do_day_close():
@@ -48,8 +53,8 @@ class RBreakers(bt.Strategy):
                 self.sell(size=24)
 
 
-    def notify_trade(self, trade):
-        if trade.isclosed:
+    def notify_trade(self, trade):        
+        if self.params.print_log and trade.isclosed:
             print('(open:%s,close:%s)毛收益 %0.2f, 扣佣后收益 % 0.2f, 佣金 %.2f' %
                      (bt.num2date(trade.dtopen),bt.num2date(trade.dtclose),trade.pnl, trade.pnlcomm, trade.commission))
 
