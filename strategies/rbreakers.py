@@ -6,10 +6,13 @@ from loguru import logger
 
 class RBreakers(bt.Strategy):
     params = (
-        ('lose_stop', 1), 
-        ('win_stop', 1.2),
+        ('lose_close', 0.005), #止损参数，参数即上一周期收盘价的倍数，运行中使用lose_close和lose_stop中的最小值作为止损条件
+        ('lose_stop', 0.3),  #止损参数，参数即当前atr的倍数
+        ('win_stop', 2), #止赢参数，参数即当前atr的倍数
+        ('has_night_trade', False),
         ('print_log',False)
     )
+
     def __init__(self):
         self.rbreaker = RBreakersIndicator()
         self.rbreaker.plotinfo.plotmaster  = self.data
@@ -28,31 +31,19 @@ class RBreakers(bt.Strategy):
         if self._do_day_close():
             return
 
-
-        if self.buy_price is not None and self.buy_price > self.data1.close[0] + self.p.lose_stop * self.atr[0]:
-            if self.position.size > 0 and self.data1.datetime.datetime(0).day == self.data.datetime.datetime(0).day:
-                self.close()
-                return
-        if self.sell_price is not None and self.sell_price < self.data1.close[0] - self.p.lose_stop * self.atr[0]:
-            if self.position.size < 0  and self.data1.datetime.datetime(0).day == self.data.datetime.datetime(0).day:
-                self.close()
-                return
-
-        if self.buy_price is not None and self.buy_price < self.data1.close[0] - self.p.win_stop * self.atr[0]:
-            if self.position.size > 0 and self.data1.datetime.datetime(0).day == self.data.datetime.datetime(0).day:
-                self.close()
-                return
-        if self.sell_price is not None and self.sell_price > self.data1.close[0] + self.p.win_stop * self.atr[0]:
-            if self.position.size < 0  and self.data1.datetime.datetime(0).day == self.data.datetime.datetime(0).day:
-                self.close()
-                return
-
         if self.long_signal[0] and self.position.size == 0:
-               self.buy(size=24)
+            self.buy_bracket(
+                price=self.data0.close, 
+                limitprice=self.data0.close + self.p.win_stop*self.atr[0],
+                stopprice=self.data0.close - min(self.p.lose_stop*self.atr[0],self.data0.close[-1]*self.p.lose_close)
+            )
         elif self.short_signal[0] and self.position.size ==0:
-                self.sell(size=24)
-
-
+            self.sell_bracket(
+                price=self.data0.close, 
+                limitprice=self.data0.close - self.p.win_stop*self.atr[0],
+                stopprice=self.data0.close + min(self.p.lose_stop*self.atr[0],self.data0.close[-1]*self.p.lose_close)
+            )
+            
     def notify_trade(self, trade):        
         if self.params.print_log and trade.isclosed:
             print('(open:%s,close:%s)毛收益 %0.2f, 扣佣后收益 % 0.2f, 佣金 %.2f' %
@@ -68,12 +59,14 @@ class RBreakers(bt.Strategy):
                 self.sell_price = order.executed.price
 
     def _do_day_close(self):
-        if self.data.datetime.datetime(0).time() == time(14,59):
+        is_day_last_bar = (self.data.datetime.datetime(0).time() == time(14,59)) if not self.p.has_night_trade else (self.data.datetime.datetime(0).time() == time(18,59))        
+        if is_day_last_bar:
             self.close()
             self.buy_price = None
             self.sell_price = None
             return True
-        if self.data.datetime.datetime(0).time() == time(15,0):
+        is_day_last_bar = (self.data.datetime.datetime(0).time() == time(14,59)) if not self.p.has_night_trade else (self.data.datetime.datetime(0).time() == time(19,0))
+        if is_day_last_bar:
             return True
         
         return False

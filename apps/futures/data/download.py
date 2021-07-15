@@ -13,15 +13,26 @@ def dl(symbol, fre):
     path = os.path.join(os.path.dirname(__file__), symbol+'_'+fre+'.csv')
     data.to_csv(path,index=None)
 
-def combine(csv1, csv2):
+def combine(csv1, csv2, is_good=False):
     df1 = pd.read_csv(csv1)
-    df1['date'] =pd.to_datetime(df1['bob']).dt.to_period('D')
+    if is_good:
+        df1['eob'] = pd.to_datetime(df1['eob']) + pd.Timedelta(hours=4)
+        df1['bob'] = pd.to_datetime(df1['bob']) + pd.Timedelta(hours=4)
+        df1['date'] =df1['bob'].dt.to_period('D')
+    else:
+        df1['date'] =pd.to_datetime(df1['bob']).dt.to_period('D')
     df1['pre_open'] = df1['open'].shift()
     df1['pre_high'] = df1['high'].shift()
     df1['pre_low'] = df1['low'].shift()
     df1['pre_close'] = df1['close'].shift()
 
     df2 = pd.read_csv(csv2)
+    if is_good:
+        df2['eob'] = pd.to_datetime(df2['eob']) + pd.Timedelta(hours=4)
+        df2['bob'] = pd.to_datetime(df2['bob']) + pd.Timedelta(hours=4)
+        df2['date'] =df2['bob'].dt.to_period('D')
+    else:
+        df2['date'] =pd.to_datetime(df1['bob']).dt.to_period('D')
     df2['date'] = pd.to_datetime(df2['bob']).dt.to_period('D')
     df3 = pd.merge(df2, df1, on='date')
     df3.rename(columns={
@@ -47,11 +58,20 @@ def combine(csv1, csv2):
 
 
 if __name__ == '__main__':
-    # symbol = 'CFFEX.IC00'
-    # fre = '1d'
-    # dl(symbol, fre)
+    is_good = True # 是否是商品期货 股指期货无夜盘
+
+    # 从掘金平台下载期货数据
+    # symbol = 'CFFEX.IC00' 
+    # symbol = 'SHFE.CU' # 铜
+    # symbol = 'SHFE.AL' # 铝
+    symbol = 'SHFE.RB' # 螺纹钢
+
+    fre1 = '1d'
+    fre2 = '60s'    
+    dl(symbol, fre1)
+    dl(symbol, fre2)
 
     base_dir = os.path.dirname(__file__)
-    csv1 = os.path.join(base_dir, 'CFFEX.IC00_1d.csv')
-    csv2 = os.path.join(base_dir, 'CFFEX.IC00_60s.csv')
-    combine(csv1, csv2)
+    csv1 = os.path.join(base_dir, '%s_%s.csv' % (symbol,fre1))
+    csv2 = os.path.join(base_dir, '%s_%s.csv' % (symbol,fre2))
+    combine(csv1, csv2, is_good)

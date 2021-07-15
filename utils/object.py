@@ -1,5 +1,5 @@
 import backtrader as bt
-
+import backtrader.feeds as btfeed
 
 class CustomDataset(bt.feeds.GenericCSVData):
     params = (
@@ -15,4 +15,13 @@ class CustomDataset(bt.feeds.GenericCSVData):
 class FullMoney(bt.sizers.PercentSizer):
     params = (
         ('percents', 99),
+    )
+
+class FixPeriodCSVData(btfeed.GenericCSVData):
+    lines = ('pre_day_open','pre_day_high','pre_day_low','pre_day_close')
+    params = (
+        ('pre_day_open',8),
+        ('pre_day_high',9),
+        ('pre_day_low',10),
+        ('pre_day_close',11)
     )

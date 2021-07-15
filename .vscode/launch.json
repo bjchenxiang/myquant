@@ -29,7 +29,7 @@
             "env": {
                 "PYTHONPATH": "${workspaceFolder}"
             },
-            "justMyCode": true
+            "justMyCode": false
         }
     ]
 }
