@@ -62,7 +62,7 @@ def ccxt_download(exchange_name, symbol, timeframe='1m', limit=3000):
 
 if __name__ == '__main__':
     limit = 30000
-    symbol = 'BTC/USDT'
+    symbol = 'ETH/USDT'
     exchange_name = 'binance'
     timeframe = '1m'
 
