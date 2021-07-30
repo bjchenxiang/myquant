@@ -83,8 +83,8 @@ def set_live_broker():
     EXCHANGE = 'binance'
     COIN_TARGET = "BTC"
     COIN_REFER = "USDT"
-    APIKEY = 'x2f7KEqKQTe6VyoW8JqTa666KcdvR6l5WlsBldC4Mn2MVvbHKN3RKUlaELSdeOva'
-    SECRET = 'KjoMLIlCDxmAGSSPdQhCfZ9fOhPvnbN3s7xXIfNToH3yD9UarCOlLZEgbC2fBolA'
+    APIKEY = ''
+    SECRET = ''
     
 
     broker_config = {
