@@ -10,7 +10,7 @@
             "request": "launch",
             // "program": "apps\\crypto\\run.py",
             //"program": "apps\\crypto\\main_classic_grid.py",
-            "program": "apps\\crypto\\dataset\download.py",
+            "program": "apps\\crypto\\dataset\\download.py",
             "console": "integratedTerminal",
             "env": {
                 "PYTHONPATH": "${workspaceFolder}",
